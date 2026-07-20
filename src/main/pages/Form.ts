@@ -11,6 +11,11 @@ export class Form extends Home{
     public readonly country:Locator;
     public readonly color:Locator;
     public readonly animals:Locator;
+    public readonly date1:Locator;
+    public readonly date2:Locator;
+    public readonly selectMonth:Locator;
+    public readonly selectYear:Locator;
+    public readonly selectDate:Locator;
 
     constructor(page:Page){
         super(page);
@@ -22,6 +27,16 @@ export class Form extends Home{
         this.country=page.locator("#country");
         this.color=page.locator("#colors");
         this.animals=page.locator("#animals");
+        this.date1=page.locator("#datepicker");
+
+        this.date2=page.locator("#txtDate");
+        this.selectMonth=page.locator('[class="ui-datepicker-month"]');
+        this.selectYear=page.locator('[class="ui-datepicker-year"]');
+        this.selectDate=page.locator('.ui-datepicker-calendar>tbody>tr>td');
+
+
+
+
     }
 
     async fillUserName(name:string):Promise<void>{
@@ -83,6 +98,26 @@ export class Form extends Home{
         // If you still want to log what was available in the dropdown:
   const allAnimals = await this.animals.locator('option').allTextContents();
   console.log("Available options in dropdown:", allAnimals.map(c => c.trim()));
+    }
+
+    async datePicker1(){
+
+    }
+
+    async datePicker2(datePass:string):Promise<void>{
+        await this.date2.click();
+        await this.selectMonth.selectOption("Dec");
+        await this.selectYear.selectOption("2036");
+
+        for(let i=0;i<await this.selectDate.count();i++){
+            let date=await this.selectDate.nth(i).textContent();
+            if(date==datePass){
+                await this.selectDate.nth(i).click();
+                break;
+            }
+        }
+
+
     }
 
 

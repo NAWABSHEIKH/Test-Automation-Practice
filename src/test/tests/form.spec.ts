@@ -22,6 +22,7 @@ test.describe("Form Filling Details",async ():Promise<void>=>{
     await form.selectCountry("India")
     await form.selectColor(["green","red","white"]);
     await form.sortAnimals(["Cat","Fox","Zebra"])
+    await form.datePicker2("31")
     await page.pause();
     });
 
