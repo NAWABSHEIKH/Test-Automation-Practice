@@ -16,6 +16,11 @@ export class Form extends Home{
     public readonly selectMonth:Locator;
     public readonly selectYear:Locator;
     public readonly selectDate:Locator;
+    public readonly monthTitle:Locator;
+    public readonly nextMonthArrow:Locator;
+    public readonly startDate:Locator;
+    public readonly endDate:Locator;
+    public readonly submitBtn:Locator;
 
     constructor(page:Page){
         super(page);
@@ -27,12 +32,19 @@ export class Form extends Home{
         this.country=page.locator("#country");
         this.color=page.locator("#colors");
         this.animals=page.locator("#animals");
+
         this.date1=page.locator("#datepicker");
+        this.monthTitle=page.locator('[class="ui-datepicker-month"]')
+        this.nextMonthArrow=page.locator('[data-handler="next"]');
 
         this.date2=page.locator("#txtDate");
         this.selectMonth=page.locator('[class="ui-datepicker-month"]');
         this.selectYear=page.locator('[class="ui-datepicker-year"]');
         this.selectDate=page.locator('.ui-datepicker-calendar>tbody>tr>td');
+
+        this.startDate=page.getByPlaceholder("Start Date");
+        this.endDate=page.getByPlaceholder("End Date");
+        this.submitBtn=page.locator('#post-body-1307673142697428135').getByRole('button', { name: 'Submit' });
 
 
 
@@ -100,7 +112,24 @@ export class Form extends Home{
   console.log("Available options in dropdown:", allAnimals.map(c => c.trim()));
     }
 
-    async datePicker1(){
+    async datePicker1(month:string,datePass:string):Promise<void>{
+        await this.date1.click();
+        let currectMonth:string=await this.monthTitle.innerText();
+        // console.log(`Current Month ${currectMonth}`)
+        while(currectMonth!=month){
+            await this.nextMonthArrow.click();
+            currectMonth=await this.monthTitle.innerText();
+            // console.log(`Current Month ${currectMonth}`)
+        }
+
+        for(let i=0;i<await this.selectDate.count();i++){
+            let date=await this.selectDate.nth(i).textContent();
+            if(date==datePass){
+                await this.selectDate.nth(i).click();
+                break;
+            }
+        }
+
 
     }
 
@@ -119,6 +148,20 @@ export class Form extends Home{
 
 
     }
+
+    async selectDateRange(startYear:string,startMonth:string,startDay:string,
+                         endYear:string,endMonth:string,endDay:string):Promise<void>{
+            const start=`${startYear}-${startMonth}-${startDay}`;
+            const end=`${endYear}-${endMonth}-${endDay}`;
+
+            await this.startDate.fill(start);
+            await this.endDate.fill(end);    
+            await this.submitBtn.click();  
+    }
+
+
+
+    
 
 
 }
