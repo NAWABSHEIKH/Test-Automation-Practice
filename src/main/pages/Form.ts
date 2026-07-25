@@ -133,10 +133,10 @@ export class Form extends Home{
 
     }
 
-    async datePicker2(datePass:string):Promise<void>{
+    async datePicker2(datePass:string,monthPass:string,yearPass:string):Promise<void>{
         await this.date2.click();
-        await this.selectMonth.selectOption("Dec");
-        await this.selectYear.selectOption("2036");
+        await this.selectMonth.selectOption(monthPass);
+        await this.selectYear.selectOption(yearPass);
 
         for(let i=0;i<await this.selectDate.count();i++){
             let date=await this.selectDate.nth(i).textContent();
