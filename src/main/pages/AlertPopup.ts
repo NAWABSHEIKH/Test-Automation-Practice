@@ -8,6 +8,8 @@ export class AlertPopup extends Home{
     public readonly confirmationAlert:Locator;
     public readonly promtAlert:Locator;
     public readonly alertMessage:Locator;
+    public readonly newTab:Locator;
+    public readonly newWindowTab:Locator;
 
     constructor(page:Page){
         super(page);
@@ -15,6 +17,8 @@ export class AlertPopup extends Home{
         this.confirmationAlert=page.getByRole("button",{name:'Confirmation Alert'});
         this.promtAlert=page.getByRole("button",{name:'Prompt Alert'});
         this.alertMessage=page.locator('[id="demo"]');
+        this.newTab=page.getByRole("button",{name:'New Tab'});
+        this.newWindowTab=page.getByRole("button",{name:'Popup Windows'});
     }
 
     async simpleAlertBtn():Promise<void>{
@@ -64,6 +68,29 @@ export class AlertPopup extends Home{
 
     
 }
+
+  async  clickNewTab():Promise<string>{
+
+
+    const childPage=this.page.waitForEvent("popup");
+    await this.newTab.click();
+    const childPagePromise=await childPage;
+    await childPagePromise.waitForLoadState();
+    return await childPagePromise.title();
+   
+  }
+
+async clickNewWindow():Promise<string>{
+    console.log((await this.page.title())!);
+    const popupPromise=this.page.waitForEvent("popup");
+    await this.newWindowTab.click();
+    const seleniumPage=await popupPromise;
+    console.log((await seleniumPage.title())!);
+    return (await seleniumPage.title())!;
+
+}
+
+
 
 }
 

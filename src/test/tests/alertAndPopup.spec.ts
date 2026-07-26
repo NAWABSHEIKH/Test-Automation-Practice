@@ -34,4 +34,20 @@ test.describe("Alert and Popup",async ():Promise<void>=>{
 
     })
 
+
+    test("4. Open New Tab",async ({page})=>{
+    alert=new AlertPopup(page);
+    const messageVerify:string=await alert.clickNewTab();
+    expect(messageVerify).toMatch(/SDET-QA Blog/i)
+
+    })
+
+
+    test("5. Click new window",async ({page})=>{
+    alert=new AlertPopup(page);
+    const message:string=await alert.clickNewWindow();
+    expect(message).toMatch(/Selenium/i);
+    })
+
+
 })
