@@ -21,4 +21,18 @@ test.describe("All Table",async()=>{
        
     })
 
+    /** 1. table.getProcessOccupyValue("Memory (MB)","Firefox")   table.getProcessMessage("Memory","Firefox"))
+     *  2. CPU Chrome       (await table.getProcessMessage("CPU","Chrome"))! (await table.getProcessOccupyValue("CPU (%)","Chrome"))!
+     *  3. Network Chrome  (await table.getProcessOccupyValue("Network (Mbps)","Chrome"))!  (await table.getProcessMessage("Network","Chrome"))!
+     *  4. Disk Firefox    (await table.getProcessOccupyValue("Disk (MB/s)","Firefox")) (await table.getProcessMessage("Disk","Firefox"))!
+     */
+
+    test("2. Dynamic Table",async({page})=>{
+        table=new Table(page);
+       const rowValue:string= (await table.getProcessOccupyValue("CPU (%)","Chrome"))!;
+        const paraValue:string=(await table.getProcessMessage("CPU","Chrome"))!;
+        console.log(`Row Data: ${rowValue} ---> Para Data: ${paraValue}`);
+        expect(rowValue).toMatch(paraValue);
+    })
+
 })
