@@ -35,4 +35,11 @@ test.describe("All Table",async()=>{
         expect(rowValue).toMatch(paraValue);
     })
 
+     test.only("3. Pagination Table",async({page})=>{
+        table=new Table(page);
+        const products:string[]=["Wireless Earbuds","Action Camera","Portable Charger","Soundbar","Laptop"];
+        await table.selectProductFromTable(products);
+       // console.log(await table.getSelectedProductFromTable());
+    })
+
 })

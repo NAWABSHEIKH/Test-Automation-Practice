@@ -15,6 +15,12 @@ export class Table extends Home{
     /**This is for fetching message. */
     public readonly processMsg:Locator;
 
+    /**This is for pagination table */
+    public readonly paginationTableHeading:Locator;
+    public readonly productTableRow:Locator;
+    public readonly totalPaginationInTable:Locator;
+
+
     constructor(page:Page){
         super(page);
         this.staticHeading=page.getByRole("heading",{name:'Static Web Table'});
@@ -25,7 +31,97 @@ export class Table extends Home{
         this.dynamicRowsData=page.locator("#taskTable>tbody>tr");
 
         this.processMsg=page.locator("#displayValues>p");
+
+        /*---------------------------------------*/
+        this.paginationTableHeading=page.getByRole("heading",{name:"Pagination Web Table"});
+        this.productTableRow=page.locator("#productTable>tbody>tr");
+        this.totalPaginationInTable=page.locator("#pagination>li>a");
+
     }
+
+    async getSelectedProductFromTable():Promise<string[]>{
+        await this.paginationTableHeading.scrollIntoViewIfNeeded();
+        let tableRowLength=await this.productTableRow.count();
+        let paginationLength=await this.totalPaginationInTable.count();
+        let selectedProducts:string[]=[];
+
+        console.log(`${tableRowLength}--> ${paginationLength} `);
+
+        for(let i=1;i<paginationLength;){
+            for(let j=0;j<tableRowLength;j++){
+                const isSelectedProduct:boolean=(await this.productTableRow.nth(j).locator("td").nth(3).isEnabled())!;
+                console.log(`${j}. ${isSelectedProduct} `);
+                if(isSelectedProduct){
+                 const product:string=(await this.productTableRow.nth(j).locator("td").nth(1).textContent())!;
+                 selectedProducts.push(product);
+                }
+              
+        }
+        await this.totalPaginationInTable.nth(i++).click();
+        // this.page.waitForEvent("domcontentloaded");
+        }
+        return selectedProducts;
+        
+    }
+
+    async selectProductFromTable(products: string[]): Promise<void> {
+    await this.paginationTableHeading.scrollIntoViewIfNeeded();
+    const totalPages = await this.totalPaginationInTable.count();
+    for (let page = 0; page < totalPages; page++) {
+        // Don't click Page 1 because it is already open.
+        if (page > 0) {
+            await this.totalPaginationInTable.nth(page).click();
+        }
+        // Fetch row count for the current page.
+        const rowCount = await this.productTableRow.count();
+        for (let row = 0; row < rowCount; row++) {
+            const productName = (
+                await this.productTableRow
+                    .nth(row)
+                    .locator("td")
+                    .nth(1)
+                    .textContent()
+            )?.trim();
+            console.log(`Page ${page + 1} -> ${productName}`);
+            if (productName && products.includes(productName)) {
+                await this.productTableRow
+                    .nth(row)
+                    .locator("td")
+                    .nth(3)
+                    .locator("input")
+                    .check();      // or click()
+                console.log(`${productName} selected`);
+            }
+        }
+    }
+}
+
+    // async selectProductFromTable(products:string[]):Promise<void>{
+    //     await this.paginationTableHeading.scrollIntoViewIfNeeded();
+    //     let tableRowLength=await this.productTableRow.count();
+    //     let paginationLength=await this.totalPaginationInTable.count();
+
+    //     console.log(`${tableRowLength}--> ${paginationLength} `);
+
+    //     for(let i=0;i<paginationLength;){
+    //        console.log(`${i}. pagination `);
+    //         for(let j=0;j<tableRowLength;j++){
+    //             const productName:string=(await this.productTableRow.nth(j).locator("td").nth(1).textContent())!;
+    //             console.log(`${j}. ${productName} `);
+    //             for(let product of products){
+    //                 if(product==productName){
+    //                 await this.productTableRow.nth(j).locator("td").nth(3).locator("input").click();
+    //                 break;   
+    //             }
+    //         }
+    //     }
+    //     await this.totalPaginationInTable.nth(i++).click();
+    //     // this.page.waitForEvent("domcontentloaded");
+    //     }
+
+    // }
+
+    
 
     async getProcessMessage(process:string,browser:string):Promise<string|void>{
 
