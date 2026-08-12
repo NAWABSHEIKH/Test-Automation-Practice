@@ -31,15 +31,14 @@ test.describe("All Table",async()=>{
         table=new Table(page);
        const rowValue:string= (await table.getProcessOccupyValue("CPU (%)","Chrome"))!;
         const paraValue:string=(await table.getProcessMessage("CPU","Chrome"))!;
-        console.log(`Row Data: ${rowValue} ---> Para Data: ${paraValue}`);
-        expect(rowValue).toMatch(paraValue);
+        expect(rowValue).toBeTruthy();
+        expect(rowValue).toBe(paraValue);
     })
 
-     test.only("3. Pagination Table",async({page})=>{
+     test("3. Pagination Table",async({page})=>{
         table=new Table(page);
         const products:string[]=["Wireless Earbuds","Action Camera","Portable Charger","Soundbar","Laptop"];
         await table.selectProductFromTable(products);
-       // console.log(await table.getSelectedProductFromTable());
     })
 
 })

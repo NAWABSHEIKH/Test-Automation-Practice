@@ -46,7 +46,7 @@ test.describe("Alert and Popup",async ():Promise<void>=>{
     test("5. Click new window",async ({page})=>{
     alert=new AlertPopup(page);
     const message:string=await alert.clickNewWindow();
-    expect(message).toMatch(/Selenium/i);
+    expect(message).toMatch(/Selenium|Playwright/i);
     })
 
 

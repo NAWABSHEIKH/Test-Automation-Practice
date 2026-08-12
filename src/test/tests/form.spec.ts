@@ -28,7 +28,7 @@ test.describe("Form Filling Details",async ():Promise<void>=>{
     "1990", "06", "12",
     "2001", "11", "29");
 
-    await page.pause();
+    
     });
 
 })

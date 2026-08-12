@@ -1,12 +1,33 @@
 
-# Playwright
+# Dependencies
 node_modules/
+
+# Playwright artifacts
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
- *.png
- *.jpg
- *.PNG
- *.JPG
+
+# Local downloads and generated files
+FolderAttachment/downloads/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.pdf
+*.PNG
+*.JPG
+*.JPEG
+*.GIF
+*.WEBP
+*.PDF
+
+# Environment files
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/

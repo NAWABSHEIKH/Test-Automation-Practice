@@ -1,4 +1,4 @@
-import {Locator,Page} from '@playwright/test';
+import {Locator,Page,expect} from '@playwright/test';
 import { Home } from './Home';
 
 export class Table extends Home{
@@ -68,11 +68,10 @@ export class Table extends Home{
     await this.paginationTableHeading.scrollIntoViewIfNeeded();
     const totalPages = await this.totalPaginationInTable.count();
     for (let page = 0; page < totalPages; page++) {
-        // Don't click Page 1 because it is already open.
         if (page > 0) {
             await this.totalPaginationInTable.nth(page).click();
         }
-        // Fetch row count for the current page.
+
         const rowCount = await this.productTableRow.count();
         for (let row = 0; row < rowCount; row++) {
             const productName = (
@@ -82,19 +81,20 @@ export class Table extends Home{
                     .nth(1)
                     .textContent()
             )?.trim();
-            console.log(`Page ${page + 1} -> ${productName}`);
+
             if (productName && products.includes(productName)) {
-                await this.productTableRow
+                const checkbox = this.productTableRow
                     .nth(row)
                     .locator("td")
                     .nth(3)
-                    .locator("input")
-                    .check();      // or click()
-                console.log(`${productName} selected`);
+                    .locator("input");
+                await checkbox.check();
+                await expect(checkbox).toBeChecked();
             }
         }
     }
 }
+
 
     // async selectProductFromTable(products:string[]):Promise<void>{
     //     await this.paginationTableHeading.scrollIntoViewIfNeeded();
