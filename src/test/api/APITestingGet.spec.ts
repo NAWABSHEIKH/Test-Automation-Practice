@@ -29,11 +29,16 @@ test('GET request', async ({request}) => {
 } )
 
 test('Get request with Id', async ({request}) => {
-    const response = await request.get('https://restful-booker.herokuapp.com/booking/1');
-    console.log(await response.json());
-    test.expect(response.status()).toBe(200);
+    const bookingListResponse = await request.get('https://restful-booker.herokuapp.com/booking');
+    test.expect(bookingListResponse.status()).toBe(200);
+    const bookingList = await bookingListResponse.json();
+    test.expect(bookingList.length).toBeGreaterThan(0);
+
+    const bookingId = bookingList[0].bookingid;
+    const response = await request.get('https://restful-booker.herokuapp.com/booking/' + bookingId);
     const responseBody = await response.json();
-    //test.expect(responseBody.firstname).toBe('Jim');
+    console.log(responseBody);
+    test.expect(response.status()).toBe(200);
     test.expect(responseBody).toHaveProperty('firstname');
 })
 
