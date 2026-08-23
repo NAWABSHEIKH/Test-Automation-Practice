@@ -47,7 +47,7 @@ test('Get request with context url', async ({}) => {
         baseURL: 'https://restful-booker.herokuapp.com',
     })
     const responseWithID = await context.get('/booking/2');
-    console.log(await responseWithID.json());
+   // console.log(await responseWithID.json());
     test.expect(responseWithID.status()).toBe(200);
 
 })
