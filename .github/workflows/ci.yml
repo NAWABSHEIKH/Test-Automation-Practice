@@ -2,7 +2,17 @@ name: Playwright CI
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   chromium-tests:
@@ -57,3 +67,21 @@ jobs:
           name: allure-results
           path: allure-results/
           if-no-files-found: ignore
+
+      - name: Upload Allure report for GitHub Pages
+        if: always() && github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report/
+
+  deploy-allure-report:
+    if: always() && github.event_name == 'push' && needs.chromium-tests.result != 'cancelled'
+    needs: chromium-tests
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Allure report to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
